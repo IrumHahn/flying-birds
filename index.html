@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>새 게임</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #87CEEB, #98D8E8);
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid #333;
+            background: linear-gradient(to bottom, #87CEEB, #98D8E8);
+        }
+        .game-info {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        .instructions {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .scoreboard {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+        .scoreboard h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+            text-align: center;
+        }
+        .score-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .game-over-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .modal-content h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .modal-content input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin: 10px;
+            width: 200px;
+        }
+        .modal-content button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #4CAF50;
+            color: white;
+        }
+        .modal-content button:hover {
+            background: #45a049;
+        }
+        .game-title {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            z-index: 100;
+        }
+        .game-title h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div class="game-title">
+        <h1>한이룸 오락실 - 플라잉 버드</h1>
+    </div>
+    <div class="game-info">
+        <div>점수: <span id="score">0</span></div>
+    </div>
+    <div class="scoreboard">
+        <h3>🏆 명예의 전당</h3>
+        <div id="highScores"></div>
+    </div>
+    <div class="instructions" id="instructions">
+        스페이스바를 눌러 새를 조종하세요!<br>
+        스페이스바를 누르면 시작합니다.
+    </div>
+    <div class="game-over-modal" id="gameOverModal" style="display: none;">
+        <div class="modal-content">
+            <h2>🎮 게임 오버!</h2>
+            <p>최종 점수: <span id="finalScore">0</span></p>
+            <input type="text" id="playerName" placeholder="이름을 입력하세요" maxlength="10" onkeypress="if(event.key==='Enter') game.saveScore()">
+            <button onclick="game.saveScore()">점수 저장</button>
+            <button onclick="document.getElementById('gameOverModal').style.display='none'; game.restartGame()">다시 시작</button>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
