@@ -152,26 +152,24 @@ class Game {
             }
         });
 
-        // 터치 이벤트 (모바일 대응)
-        const canvas = document.getElementById('gameCanvas');
-        
-        canvas.addEventListener('touchstart', (e) => {
+        // 터치 이벤트 (모바일 대응) - 전체 화면에서 감지
+        document.addEventListener('touchstart', (e) => {
             e.preventDefault();
             this.handleJumpStart();
-        });
+        }, { passive: false });
 
-        canvas.addEventListener('touchend', (e) => {
+        document.addEventListener('touchend', (e) => {
             e.preventDefault();
             this.handleJumpEnd();
-        });
+        }, { passive: false });
 
         // 마우스 이벤트 (데스크톱 추가 지원)
-        canvas.addEventListener('mousedown', (e) => {
+        document.addEventListener('mousedown', (e) => {
             e.preventDefault();
             this.handleJumpStart();
         });
 
-        canvas.addEventListener('mouseup', (e) => {
+        document.addEventListener('mouseup', (e) => {
             e.preventDefault();
             this.handleJumpEnd();
         });
@@ -183,6 +181,11 @@ class Game {
     }
 
     handleJumpStart() {
+        // 모바일에서 오디오 컨텍스트 활성화
+        if (this.audioContext && this.audioContext.state === 'suspended') {
+            this.audioContext.resume();
+        }
+        
         this.keys.space = true;
         
         if (!this.gameStarted) {
@@ -541,4 +544,16 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-gameLoop();
+// 페이지 로드 완료 후 게임 시작
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('게임 로드 완료');
+    gameLoop();
+});
+
+// 바로 시작 (DOMContentLoaded 이벤트가 이미 발생한 경우)
+if (document.readyState === 'loading') {
+    // 아직 로딩 중이면 DOMContentLoaded 이벤트를 기다림
+} else {
+    // 이미 로드되었으면 바로 시작
+    gameLoop();
+}
