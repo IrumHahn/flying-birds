@@ -138,34 +138,72 @@ class Game {
     }
 
     setupEventListeners() {
+        // 키보드 이벤트
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space') {
                 e.preventDefault();
-                this.keys.space = true;
-                
-                if (!this.gameStarted) {
-                    this.startGame();
-                } else if (this.gameOver) {
-                    document.getElementById('gameOverModal').style.display = 'none';
-                    this.restartGame();
-                } else {
-                    this.bird.jump();
-                    this.playJumpSound();
-                    this.longJumpStartTime = Date.now();
-                }
+                this.handleJumpStart();
             }
         });
 
         document.addEventListener('keyup', (e) => {
             if (e.code === 'Space') {
-                this.keys.space = false;
-                // 긴 점프 소리 재생
-                if (this.longJumpStartTime && Date.now() - this.longJumpStartTime > 200) {
-                    this.playLongJumpSound();
-                }
-                this.longJumpStartTime = 0;
+                this.handleJumpEnd();
             }
         });
+
+        // 터치 이벤트 (모바일 대응)
+        const canvas = document.getElementById('gameCanvas');
+        
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            this.handleJumpStart();
+        });
+
+        canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            this.handleJumpEnd();
+        });
+
+        // 마우스 이벤트 (데스크톱 추가 지원)
+        canvas.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            this.handleJumpStart();
+        });
+
+        canvas.addEventListener('mouseup', (e) => {
+            e.preventDefault();
+            this.handleJumpEnd();
+        });
+
+        // 터치 스크롤 방지
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+    }
+
+    handleJumpStart() {
+        this.keys.space = true;
+        
+        if (!this.gameStarted) {
+            this.startGame();
+        } else if (this.gameOver) {
+            document.getElementById('gameOverModal').style.display = 'none';
+            this.restartGame();
+        } else {
+            this.bird.jump();
+            this.playJumpSound();
+            this.longJumpStartTime = Date.now();
+        }
+    }
+
+    handleJumpEnd() {
+        this.keys.space = false;
+        // 긴 점프 소리 재생
+        if (this.longJumpStartTime && Date.now() - this.longJumpStartTime > 200) {
+            this.playLongJumpSound();
+        }
+        this.longJumpStartTime = 0;
     }
 
     startGame() {

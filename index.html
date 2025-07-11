@@ -118,6 +118,7 @@
             border: 2px solid #FFD700;
             z-index: 100;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: calc(100vw - 340px);
         }
         .game-title h1 {
             margin: 0;
@@ -126,6 +127,69 @@
             color: #FFD700;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px rgba(255, 215, 0, 0.5);
             letter-spacing: 1px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* 모바일 대응 */
+        @media (max-width: 768px) {
+            .game-title {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin: 10px auto;
+                max-width: 90%;
+                text-align: center;
+            }
+            .game-title h1 {
+                font-size: 18px;
+                white-space: normal;
+            }
+            .scoreboard {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin: 10px auto;
+                max-width: 90%;
+            }
+            .game-info {
+                bottom: 60px;
+                font-size: 18px;
+            }
+            canvas {
+                max-width: 100%;
+                height: auto;
+            }
+            body {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .desktop-instruction {
+                display: none;
+            }
+            .mobile-instruction {
+                display: inline;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .game-title h1 {
+                font-size: 16px;
+            }
+            .scoreboard {
+                font-size: 12px;
+            }
+        }
+        
+        /* 데스크톱에서는 모바일 안내 숨기기 */
+        @media (min-width: 769px) {
+            .desktop-instruction {
+                display: inline;
+            }
+            .mobile-instruction {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -142,8 +206,8 @@
         <div id="highScores"></div>
     </div>
     <div class="instructions" id="instructions">
-        스페이스바를 눌러 새를 조종하세요!<br>
-        스페이스바를 누르면 시작합니다.
+        <span class="desktop-instruction">스페이스바를 눌러 새를 조종하세요!<br>스페이스바를 누르면 시작합니다.</span>
+        <span class="mobile-instruction">화면을 터치하여 새를 조종하세요!<br>터치하면 시작합니다.</span>
     </div>
     <div class="game-over-modal" id="gameOverModal" style="display: none;">
         <div class="modal-content">
